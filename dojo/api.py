@@ -33,6 +33,9 @@ from dojo.tools.factory import import_parser_factory
 from dojo.utils import get_system_setting
 from datetime import datetime
 from object.parser import import_object_eng
+from tagging.models import Tag
+from tagging.views import TaggedItem
+from django.contrib.contenttypes.models import ContentType
 
 """
     Setup logging for the api
@@ -1588,3 +1591,112 @@ class ReImportScanResource(MultipartResource, Resource):
 
         # Everything executed fine. We successfully imported the scan.
         raise ImmediateHttpResponse(HttpCreated(location = bundle.obj.__getattr__('test')))
+
+"""
+    Lookup Tags
+    /api/v1/tags/
+    GET
+    Returns Tags
+"""
+class TagResource(BaseModelResource):
+    class Meta:
+        queryset = Tag.objects.all()
+        resource_name = 'tags'
+
+        list_allowed_methods = ['get']
+        detail_allowed_methods = ['get']
+        include_resource_uri = True
+
+        filtering = {
+            'id': ALL,
+            'name': ALL
+        }
+
+        authorization = DjangoAuthorization()
+        authentication = DojoApiKeyAuthentication()
+        serializer = Serializer(formats=['json'])
+
+"""
+    Lookup Tag Content Types
+    /api/v1/tag_content_types/
+    GET
+    Returns ContentTypes
+"""
+class TagContentTypeResource(BaseModelResource):
+    class Meta:
+        queryset = ContentType.objects.filter(app_label='dojo')
+        resource_name = 'tag_content_types'
+
+        list_allowed_methods = ['get']
+        detail_allowed_methods = ['get']
+        include_resource_uri = False
+
+        authorization = DjangoAuthorization()
+        authentication = DojoApiKeyAuthentication()
+        serializer = Serializer(formats=['json'])
+
+"""
+    Lookup Tagged Items
+    /api/v1/tagged_items/
+    GET
+    Returns TaggedItems
+"""
+class TaggedItemResource(BaseModelResource):
+    tag = fields.ForeignKey(TagResource, 'tag')
+    content_type = fields.ForeignKey(TagContentTypeResource, 'content_type')
+
+    class Meta:
+        queryset = TaggedItem.objects.all()
+        resource_name = 'tagged_items'
+
+        list_allowed_methods = ['get']
+        detail_allowed_methods = ['get']
+        include_resource_uri = False
+
+        filtering = {
+            'object_id': ALL,
+            'tag': ALL_WITH_RELATIONS,
+            'content_type': ALL_WITH_RELATIONS
+        }
+
+        authorization = DjangoAuthorization()
+        authentication = DojoApiKeyAuthentication()
+        serializer = Serializer(formats=['json'])
+
+    def dehydrate(self, bundle):
+        try:
+            bundle.data['object_url'] = self.get_object_uri(bundle.obj.content_type.model, bundle.obj.object_id)
+        except:
+            bundle.data['object_url'] = 'error'
+        return bundle
+
+    def get_product_uri(self, object_id):
+        return '/api/v1/products/' + str(object_id) + '/'
+
+    def get_engagement_uri(self, object_id):
+        return '/api/v1/engagements/' + str(object_id) + '/'
+
+    def get_test_uri(self, object_id):
+        return '/api/v1/tests/' + str(object_id) + '/'
+
+    def get_endpoint_uri(self, object_id):
+        return '/api/v1/endpoints/' + str(object_id) + '/'
+
+    def get_finding_uri(self, object_id):
+        return '/api/v1/findings/' + str(object_id) + '/'
+
+    def get_unresolved_uri(self, object_id):
+        return None
+
+    def get_object_uri(self, content_type, object_id):
+        uri_resolvers = {
+            u'product':'get_product_uri',
+            u'engagement':'get_engagement_uri',
+            u'test':'get_test_uri',
+            u'endpoint':'get_endpoint_uri',
+            u'finding':'get_finding_uri'
+        }
+
+        method_name = uri_resolvers.get(content_type, 'get_unresolved_uri')
+        method = getattr(self, method_name)
+        return method(object_id)

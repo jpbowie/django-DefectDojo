@@ -89,7 +89,8 @@ STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    os.path.dirname(DOJO_ROOT) + "/components/yarn_components",
+    os.path.join(os.path.dirname(DOJO_ROOT), 'components', 'node_modules',
+                 '@yarn_components'),
 )
 
 # List of finder classes that know how to find static files in
@@ -99,7 +100,9 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 )
 
-FILE_UPLOAD_HANDLERS = ("django.core.files.uploadhandler.TemporaryFileUploadHandler",)
+FILE_UPLOAD_HANDLERS = (
+    "django.core.files.uploadhandler.TemporaryFileUploadHandler",
+)
 
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'DOJOSECRET'
@@ -188,17 +191,16 @@ PORT_SCAN_SOURCE_IP = '127.0.0.1'
 TEAM_NAME = 'Security Engineering'
 
 # Celery settings
-BROKER_URL = 'sqla+sqlite:///dojo.celerydb.sqlite'
-CELERY_SEND_TASK_ERROR_EMAILS = True
-CELERY_IGNORE_RESULT = True
+CELERY_BROKER_URL = 'sqla+sqlite:///dojo.celerydb.sqlite'
+CELERY_TASK_IGNORE_RESULT = True
 CELERY_TIMEZONE = TIME_ZONE
-CELERY_TASK_RESULT_EXPIRES = 86400
-CELERYBEAT_SCHEDULE_FILENAME = DOJO_ROOT + '/dojo.celery.beat.db'
+CELERY_RESULT_EXPIRES = 86400
+CELERY_BEAT_SCHEDULE_FILENAME = DOJO_ROOT + '/dojo.celery.beat.db'
 CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
 CELERY_TASK_SERIALIZER = "pickle"
 
 # Celery beat scheduled tasks
-CELERYBEAT_SCHEDULE = {
+CELERY_BEAT_SCHEDULE = {
     'add-alerts': {
         'task':'dojo.tasks.add_alerts',
         'schedule': timedelta(hours=1),
@@ -229,7 +231,8 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '[%(asctime)s] %(levelname)s [%(name)s:%(lineno)d] %(message)s',
+            'format': '[%(asctime)s] %(levelname)s '
+                      '[%(name)s:%(lineno)d] %(message)s',
             'datefmt': '%d/%b/%Y %H:%M:%S',
         },
         'simple': {

@@ -36,6 +36,7 @@ from object.parser import import_object_eng
 from tagging.models import Tag
 from tagging.views import TaggedItem
 from django.contrib.contenttypes.models import ContentType
+from custom_field.models import CustomField, CustomFieldValue
 
 """
     Setup logging for the api
@@ -1617,15 +1618,15 @@ class TagResource(BaseModelResource):
         serializer = Serializer(formats=['json'])
 
 """
-    Lookup Tag Content Types
+    Lookup Dojo Content Types
     /api/v1/tag_content_types/
     GET
     Returns ContentTypes
 """
-class TagContentTypeResource(BaseModelResource):
+class DojoContentTypeResource(BaseModelResource):
     class Meta:
         queryset = ContentType.objects.filter(app_label='dojo')
-        resource_name = 'tag_content_types'
+        resource_name = 'dojo_content_types'
 
         list_allowed_methods = ['get']
         detail_allowed_methods = ['get']
@@ -1643,7 +1644,7 @@ class TagContentTypeResource(BaseModelResource):
 """
 class TaggedItemResource(BaseModelResource):
     tag = fields.ForeignKey(TagResource, 'tag')
-    content_type = fields.ForeignKey(TagContentTypeResource, 'content_type')
+    content_type = fields.ForeignKey(DojoContentTypeResource, 'content_type')
 
     class Meta:
         queryset = TaggedItem.objects.all()
@@ -1700,3 +1701,78 @@ class TaggedItemResource(BaseModelResource):
         method_name = uri_resolvers.get(content_type, 'get_unresolved_uri')
         method = getattr(self, method_name)
         return method(object_id)
+
+"""
+    Lookup Product Metadata fields
+    /api/v1/product_metadata_fields/
+    GET
+    Returns product metadata fields
+"""
+class ProductMetadataFieldsResource(BaseModelResource):
+    class Meta:
+        product_content_type = ContentType.objects.get(app_label='dojo', model='product')
+        product_content_type_id = None
+
+        if product_content_type:
+            product_content_type_id = product_content_type.id
+
+        queryset = CustomField.objects.filter(content_type_id=product_content_type_id)
+
+        resource_name = 'product_metadata_fields'
+        fields = ['id', 'name']
+
+        list_allowed_methods = ['get']
+        detail_allowed_methods = ['get']
+        include_resource_uri = True
+
+        filtering = {
+            'id': ALL,
+            'name': ALL
+        }
+
+        authorization = DjangoAuthorization()
+        authentication = DojoApiKeyAuthentication()
+        serializer = Serializer(formats=['json'])
+
+"""
+    Lookup Product Metadata
+    /api/v1/product_metadata/
+    GET
+    Returns product metadata
+"""
+class ProductMetadataResource(BaseModelResource):
+    field = fields.ForeignKey(ProductMetadataFieldsResource, 'field')
+
+    class Meta:
+        product_content_type = ContentType.objects.get(app_label='dojo', model='product')
+        product_content_type_id = None
+
+        if product_content_type:
+            product_content_type_id = product_content_type.id
+
+        queryset = CustomFieldValue.objects.filter(content_type_id=product_content_type_id)
+        resource_name = 'product_metadata'
+        fields = ['id', 'value', 'object_id']
+
+        list_allowed_methods = ['get']
+        detail_allowed_methods = ['get']
+        include_resource_uri = False
+
+        filtering = {
+            'id': ALL,
+            'value': ALL,
+            'object_id': ALL,
+            'field': ALL_WITH_RELATIONS
+        }
+
+        authorization = DjangoAuthorization()
+        authentication = DojoApiKeyAuthentication()
+        serializer = Serializer(formats=['json'])
+
+    def dehydrate(self, bundle):
+        try:
+            bundle.data['field_name'] = bundle.obj.field.name
+            bundle.data['product_name'] = Product.objects.get(id=bundle.obj.object_id).name
+        except:
+            bundle.data['field_name'] = None
+        return bundle

@@ -15,7 +15,8 @@ from dojo.api import UserResource, ProductResource, EngagementResource, \
     ReImportScanResource, JiraResource, JIRA_ConfResource, EndpointResource, \
     JIRA_IssueResource, ToolProductSettingsResource, Tool_ConfigurationResource, \
     Tool_TypeResource, LanguagesResource, LanguageTypeResource, App_AnalysisResource, \
-    BuildDetails
+    BuildDetails, TagResource, DojoContentTypeResource, TaggedItemResource, \
+    ProductMetadataFieldsResource, ProductMetadataResource
 from dojo.api_v2.views import EndPointViewSet, EngagementViewSet, \
     FindingTemplatesViewSet, FindingViewSet, JiraConfigurationsViewSet, \
     JiraIssuesViewSet, JiraViewSet, ProductViewSet, ScanSettingsViewSet, \
@@ -77,6 +78,11 @@ v1_api.register(LanguagesResource())
 v1_api.register(LanguageTypeResource())
 v1_api.register(App_AnalysisResource())
 v1_api.register(BuildDetails())
+v1_api.register(TagResource())
+v1_api.register(DojoContentTypeResource())
+v1_api.register(TaggedItemResource())
+v1_api.register(ProductMetadataFieldsResource())
+v1_api.register(ProductMetadataResource())
 # v1_api.register(IPScanResource())
 
 # v2 api written in django-rest-framework

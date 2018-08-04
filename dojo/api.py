@@ -1761,12 +1761,12 @@ class TaggedItemResource(BaseModelResource):
         return method(object_id)
 
 """
-    Lookup Product Metadata fields
-    /api/v1/product_metadata_fields/
+    Lookup Product Custom fields
+    /api/v1/product_custom_fields/
     GET
-    Returns product metadata fields
+    Returns product custom fields
 """
-class ProductMetadataFieldsResource(BaseModelResource):
+class ProductCustomFieldsResource(BaseModelResource):
     class Meta:
         product_content_type = ContentType.objects.get(app_label='dojo', model='product')
         product_content_type_id = None
@@ -1776,7 +1776,7 @@ class ProductMetadataFieldsResource(BaseModelResource):
 
         queryset = CustomField.objects.filter(content_type_id=product_content_type_id)
 
-        resource_name = 'product_metadata_fields'
+        resource_name = 'product_custom_fields'
         fields = ['id', 'name']
 
         list_allowed_methods = ['get']
@@ -1793,13 +1793,13 @@ class ProductMetadataFieldsResource(BaseModelResource):
         serializer = Serializer(formats=['json'])
 
 """
-    Lookup Product Metadata
-    /api/v1/product_metadata/
+    Lookup Product CustomFieldValues
+    /api/v1/product_customfieldvalues/
     GET
-    Returns product metadata
+    Returns product custom_field_values
 """
-class ProductMetadataResource(BaseModelResource):
-    field = fields.ForeignKey(ProductMetadataFieldsResource, 'field')
+class ProductCustomFieldValuesResource(BaseModelResource):
+    field = fields.ForeignKey(ProductCustomFieldsResource, 'field')
 
     class Meta:
         product_content_type = ContentType.objects.get(app_label='dojo', model='product')
@@ -1809,7 +1809,7 @@ class ProductMetadataResource(BaseModelResource):
             product_content_type_id = product_content_type.id
 
         queryset = CustomFieldValue.objects.filter(content_type_id=product_content_type_id)
-        resource_name = 'product_metadata'
+        resource_name = 'product_custom_field_values'
         fields = ['id', 'value', 'object_id']
 
         list_allowed_methods = ['get']

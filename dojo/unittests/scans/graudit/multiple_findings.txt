@@ -1,0 +1,4 @@
+/pathtothefile/output.py:23:Line of code with finding
+##############################################
+##############################################
+/pathtothefile/input.py:92:Another Line of code with finding

@@ -84,6 +84,9 @@ from dojo.models import (
     Answer,
     Answered_Survey,
     App_Analysis,
+    Benchmark_Category,
+    Benchmark_Requirement,
+    Benchmark_Type,
     BurpRawRequestResponse,
     Check_List,
     Cred_Mapping,
@@ -3098,3 +3101,43 @@ class NotificationWebhooksViewSet(
     filter_backends = (DjangoFilterBackend,)
     filterset_fields = "__all__"
     permission_classes = (permissions.IsSuperUser, DjangoModelPermissions)  # TODO: add permission also for other users
+
+
+class BenchmarkTypeViewset(
+    DojoModelViewSet,
+):
+    serializer_class = serializers.BenchmarkTypeSerializer
+    queryset = Benchmark_Type.objects.none()
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ["name", "version", "benchmark_source", "enabled"]
+    permission_classes = (permissions.UserHasBenchmarkDefinitionPermission,)
+
+    def get_queryset(self):
+        return Benchmark_Type.objects.all().order_by("name")
+
+
+class BenchmarkCategoryViewset(
+    DojoModelViewSet,
+):
+    serializer_class = serializers.BenchmarkCategorySerializer
+    queryset = Benchmark_Category.objects.none()
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ["name", "type", "objective", "enabled"]
+    permission_classes = (permissions.UserHasBenchmarkDefinitionPermission,)
+
+    def get_queryset(self):
+        return Benchmark_Category.objects.all().order_by("name")
+
+
+class BenchmarkRequirementViewset(
+    DojoModelViewSet,
+):
+    serializer_class = serializers.BenchmarkRequirementSerializer
+    queryset = Benchmark_Requirement.objects.none()
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ["category", "objective_number", "objective", "level_1", "level_2", "level_3", "enabled",
+                        "cwe_mapping", "testing_guide"]
+    permission_classes = (permissions.UserHasBenchmarkDefinitionPermission,)
+
+    def get_queryset(self):
+        return Benchmark_Requirement.objects.all().order_by("objective_number")

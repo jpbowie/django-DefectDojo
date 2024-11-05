@@ -14,6 +14,9 @@ from dojo.announcement.urls import urlpatterns as announcement_urls
 from dojo.api_v2.views import (
     AnnouncementViewSet,
     AppAnalysisViewSet,
+    BenchmarkCategoryViewset,
+    BenchmarkRequirementViewset,
+    BenchmarkTypeViewset,
     ConfigurationPermissionViewSet,
     CredentialsMappingViewSet,
     CredentialsViewSet,
@@ -70,7 +73,7 @@ from dojo.api_v2.views import (
     ToolTypesViewSet,
     UserContactInfoViewSet,
     UserProfileView,
-    UsersViewSet,
+    UsersViewSet, BenchmarkTypeViewset,
 )
 from dojo.api_v2.views import DojoSpectacularAPIView as SpectacularAPIView
 from dojo.banner.urls import urlpatterns as banner_urls
@@ -118,6 +121,9 @@ handler400 = "dojo.views.custom_bad_request_view"
 # v2 api written in django-rest-framework
 v2_api = DefaultRouter()
 v2_api.register(r"announcements", AnnouncementViewSet, basename="announcement")
+v2_api.register(r"benchmark_category", BenchmarkCategoryViewset, basename="benchmark_category")
+v2_api.register("benchmark_requirement", BenchmarkRequirementViewset, basename="benchmark_requirement")
+v2_api.register(r"benchmark_types", BenchmarkTypeViewset, basename="benchmark_type")
 v2_api.register(r"configuration_permissions", ConfigurationPermissionViewSet, basename="permission")
 v2_api.register(r"credential_mappings", CredentialsMappingViewSet, basename="cred_mapping")
 v2_api.register(r"credentials", CredentialsViewSet, basename="cred_user")

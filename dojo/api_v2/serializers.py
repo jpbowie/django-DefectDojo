@@ -45,6 +45,9 @@ from dojo.models import (
     Answer,
     Answered_Survey,
     App_Analysis,
+    Benchmark_Category,
+    Benchmark_Requirement,
+    Benchmark_Type,
     Check_List,
     ChoiceAnswer,
     ChoiceQuestion,
@@ -3168,4 +3171,22 @@ class AnnouncementSerializer(serializers.ModelSerializer):
 class NotificationWebhooksSerializer(serializers.ModelSerializer):
     class Meta:
         model = Notification_Webhooks
+        fields = "__all__"
+
+
+class BenchmarkTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Benchmark_Type
+        fields = "__all__"
+
+
+class BenchmarkCategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Benchmark_Category
+        fields = "__all__"
+
+
+class BenchmarkRequirementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Benchmark_Requirement
         fields = "__all__"

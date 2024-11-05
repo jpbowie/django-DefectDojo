@@ -73,6 +73,24 @@ class UserHasAppAnalysisPermission(permissions.BasePermission):
         )
 
 
+class UserHasBenchmarkDefinitionPermission(permissions.BasePermission):
+    def has_permission(self, request, view):
+        if request.method == "GET":
+            return request.user and request.user.is_authenticated
+        else:
+            return request.user and request.user.is_superuser
+
+
+    def has_object_permission(self, request, view, obj):
+        return check_object_permission(
+            request,
+            obj,
+            Permissions.Technology_View,
+            Permissions.Technology_Edit,
+            Permissions.Technology_Delete,
+        )
+
+
 class UserHasCredentialPermission(permissions.BasePermission):
     def has_permission(self, request, view):
         if request.data.get("product") is not None:

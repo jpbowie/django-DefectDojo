@@ -513,11 +513,6 @@ esutils@~1.0.0:
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-1.0.0.tgz#8151d358e20c8acc7fb745e7472c0025fe496570"
   integrity sha512-x/iYH53X3quDwfHRz4y8rn4XcEwwCJeWsul9pF1zldMbGtgOtMNBEOuYWwB1EQlK2LRa1fev3YAgym/RElp5Cg==
 
-eve-raphael@0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/eve-raphael/-/eve-raphael-0.5.0.tgz#17c754b792beef3fa6684d79cf5a47c63c4cda30"
-  integrity sha512-jrxnPsCGqng1UZuEp9DecX/AuSyAszATSjf4oEcRxvfxa1Oux4KkIPKBAAWWnpdwfARtr+Q0o9aPYWjsROD7ug==
-
 event-emitter@^0.3.5, event-emitter@~0.3.5:
   version "0.3.5"
   resolved "https://registry.yarnpkg.com/event-emitter/-/event-emitter-0.3.5.tgz#df8c69eef1647923c7157b9ce83840610b02cc39"
@@ -714,12 +709,10 @@ jszip@^3.10.1:
     readable-stream "~2.3.6"
     setimmediate "^1.0.5"
 
-justgage@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/justgage/-/justgage-1.7.0.tgz#4b615c6a88c75d4f7fab20dd32b2710e9eb36411"
-  integrity sha512-yJ9O8HU9cxo2UMFyouOJ+cnEsKVyX44Ghu3iLFaKlzahrGUAB0UcEzWDcu7JqEwC7bU/hunoAZLKF/sIcVbYQQ==
-  dependencies:
-    raphael "^2.3.0"
+justgage@^2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/justgage/-/justgage-2.0.1.tgz#aa2b83817b354da1150229ae6d1d49198e6fbc17"
+  integrity sha512-TfKADSp5KGF8YcQxOj7jYuTnzAB1HRiObQXJI0B/rSx1gu9s00D/CQc0e0jBnnFsRQs1uTI16l4AtTUCRymXXg==
 
 levn@~0.3.0:
   version "0.3.0"
@@ -857,13 +850,6 @@ quote-stream@^1.0.1:
     buffer-equal "0.0.1"
     minimist "^1.1.3"
     through2 "^2.0.0"
-
-raphael@^2.3.0:
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/raphael/-/raphael-2.3.0.tgz#eabeb09dba861a1d4cee077eaafb8c53f3131f89"
-  integrity sha512-w2yIenZAQnp257XUWGni4bLMVxpUpcIl7qgxEgDIXtmSypYtlNxfXWpOBxs7LBTps5sDwhRnrToJrMUrivqNTQ==
-  dependencies:
-    eve-raphael "0.5.0"
 
 readable-stream@^2.0.2, readable-stream@^2.2.2, readable-stream@~2.3.3, readable-stream@~2.3.6:
   version "2.3.8"
